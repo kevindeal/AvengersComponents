@@ -39,10 +39,10 @@
 //   },
 // ];
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export const CardList = () => {
-  const avengers = [
+  const [avengers, setAvengers] = useState([
     {
       id: "1",
       name: "Tony Stark",
@@ -73,22 +73,39 @@ export const CardList = () => {
       name: "Clint Barton",
       character: "Hawkeye",
     },
-  ]
- 
+  ]);
+
+  const DeleteCard = (id) => {
+    setAvengers(avengers.filter(avenger => avenger.id !== id));
+  }
+
+  const AlphabetizeCard = () => {
+    setAvengers([...avengers].sort((a, b) => a.character.localeCompare(b.character)));
+  }
+
+  
   return (
-    avengers.map((avenger, id) => {
-      <Card/>
-    })
+    <div>
+      <h1>The Avengers</h1>
+      <button onClick={AlphabetizeCard} className="Alphabetize">Alphabetize</button>
+      <ul className='avenger-list'>
+        {avengers.map((avenger) => (
+          <Card key={avenger.id} id={avenger.id} name={avenger.name} character={avenger.character} deleteCard={DeleteCard}/>
+        ))}
+      </ul>
+    </div>
   )
 }
-export const Card = ({ id, character, name }) => {
+export const Card = ({ id, character, name, deleteCard }) => {
   return (
-    <div className="card" id={id}>
-      <button className="Delete"></button>
-      <h1>{character}</h1>
-      <p>alias: {name}</p>
-    </div>
+    <li className='list-item' id={id}>
+      <div className="card">
+        <button onClick={ () => deleteCard(id) } className="Delete">Delete</button>
+        <h1>{character}</h1>
+        <p>alias: {name}</p>
+      </div>
+    </li>
   ) 
 };
 
-export default CardList;
+export default Card;
